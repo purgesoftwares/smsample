@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  
+<head>
+<meta charset="utf-8">
+<title>Allowify simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="jquery-1.10.2.js"></script> 
+<script src="bootstrap.js"></script> 
+
+<script src="script1.js"></script> 
+</head>
+<body>
+<script>
+$(document).ready(function(){
+
+	url = "http://localhost:8080/oauth/token"
+	
+	//curl -X POST -vu clientapp:123456 http://localhost:8080/oauth/token -H "Accept: application/json" -d "password=123456&username= Bob&grant_type=password&scope=read%20write&client_secret=123456&client_id=clientapp"
+	
+	$.ajax({
+    type: 'POST',
+    url: url,
+	data: "password=123456&username=Bob&grant_type=password&scope=read%20write&client_secret=123456&client_id=123456",
+	//mozSystem: true,
+	//"permissions": { "systemXHR" : {mozSystem: true}, },
+	accept: "application/json",
+    headers: {
+        "Accept":"application/json",
+		
+     //  "Access-Control-Allow-Origin":"*"
+    },
+	crossDomain: true,
+        xhrFields: {
+            withCredentials: false
+        },
+        beforeSend: function(xhr){
+            // This is always added by default
+            // Ignoring this prevents preflight - but expects browser to follow 302 location change
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader("X-Ajax-call", "true");
+        },
+		//OR
+		//beforeSend: function(xhr) { 
+		//  xhr.setRequestHeader("My-First-Header", "first value"); 
+		//  xhr.setRequestHeader("My-Second-Header", "second value"); 
+		//}
+	}).done(function(data) { 
+		console.log(data);
+		alert(data);
+		jQuery.ajax( {
+			url: 'https://public-api.wordpress.com/rest/v1/sites/' + site_id + '/posts/new',
+			type: 'POST',
+			data: { content: 'testing test' },
+			beforeSend : function( xhr ) {
+				xhr.setRequestHeader( "Authorization", "BEARER " + access_token );
+			},
+			success: function( response ) {
+				// response
+			}
+		} );
+
+	});
+	
+	/*
+	var message = "content";
+
+request = new XMLHttpRequest({mozSystem: true});
+request.open('POST', 'http://localhost:8080/msgs', true);
+
+request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+        // Success!
+        data = JSON.parse(request.responseText);
+        console.log(data);
+    } else {
+        // We reached our target server, but it returned an error
+        console.log("server error");
+    }
+};
+
+request.onerror = function () {
+    // There was a connection error of some sort
+    console.log("connection error");
+};
+
+request.send(message);
+
+	*/
+	
+});
+
+
+
+</script>
+
+
+</body>
+</html>

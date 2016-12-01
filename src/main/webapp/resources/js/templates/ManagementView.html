@@ -1,0 +1,30 @@
+<!-- Breadcrumbs -->
+<%= renderBreadcrumbs({ breadcrumbs: breadcrumbs }) %>
+
+<!-- Description Text -->
+<div class="col-lg-12 col-md-12">
+    <h1>
+        <span><%- model.title %></span>
+    </h1>
+    <p>Welcome to the <%- model.title %> management page.</p>
+</div>
+
+<!-- Panels -->
+<div class="row text-center">
+    <% _.each(model.panels, function(obj) { %>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="mgmt-panel panel panel-primary clickable"
+             onclick="window.location.href='#<%- obj.path %>'">
+            <div class="panel-heading">
+                <a href="#<%- obj.path %>" class="h3 panel-title">
+                    <%- obj.title %>
+                </a>
+            </div>
+            <div class="panel-body">
+                <p><%- obj.body %></p>
+                <p><i class="fa fa-<%- obj.icon %> fa-5x text-primary"></i></p>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+</div>

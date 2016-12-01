@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <head>
+    
+    <title>Allowify </title>
+        <!-- Bootstrap core CSS 
+    
+    <link href="http://localhost/Allowify/css/bootstrap.css" rel="stylesheet"  />
+    <link href="http://localhost/Allowify/css/bootstrap-theme.css" rel="stylesheet"  />-->
+    
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="templates/css/bootstrap-theme.css"  />
+    <link rel="stylesheet" href="templates/css/bootstrap.css"  />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" href="../../css/bootstrap.css" />
+    
+    <spring:theme var="cssresourcet" code="bootstrap-theme" />
+	<spring:url var="csspatht" url="${cssresourcet}" />
+    <link rel="stylesheet" type="text/css" href="${csspatht}" />
+    <spring:theme var="cssresource" code="bootstrap" />
+	<spring:url var="csspath" url="${cssresource}" />
+    <link rel="stylesheet" type="text/css" href="${csspath}" />
+
+    <style>
+    .container {
+	    width: 970px;
+	}
+.btn-primary {
+    background-color: #61a168;
+    border-color: #4b8252;
+    color: #ffffff;
+}
+    body{ background: #f6f6f6; margin: 0; padding: 0;}
+header{ text-align: center;}
+.logo{ margin: 26px 0 24px 0;}
+.line{ border-top: 1px #bdbdbd solid; margin: 30px 0 15px;}
+.title{border-top: 1px #bdbdbd solid; padding: 15px 0; margin: 0; font-size: 24px; color: #535853; font-weight: bold; text-transform: uppercase;}
+.form_box{ background: #fff; border: 1px #bdbdbd solid; border-radius: 10px; padding: 20px; margin-bottom: 30px;}
+.form_box label{ font-size: 16px; color: #535853; font-weight: normal; text-transform: uppercase; font-weight: bold;}
+.form_box h3{ font-size: 16px; color: #535853; text-transform: uppercase; padding: 10px 0; margin: 0; font-weight: bold;}
+.form_map iframe{ width: 100%; height: 230px; border: 1px #bdbdbd solid; margin-bottom: 10px;}
+.btn_wid{ width: 120px; text-transform: uppercase;}
+    </style>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ubilabs.github.io/geocomplete/jquery.geocomplete.js"></script>
+
+	    
+	    <script type="text/javascript">
+	      function initialize() {
+	    	  
+	    	var myLatlng = new google.maps.LatLng(-12.10, -77.03);
+	        var mapOptions = {
+	          center: myLatlng,
+	          zoom: 14,
+	          mapTypeId: google.maps.MapTypeId.ROADMAP,
+	        };
+	       // document.getElementById('map-canvas').innerHTML = '<div id="inner_map_div" style="width: 100%; height: 100%"></div>';
+			//document.getElementById('map_canvas').innerHTML  = "";
+			//$("#map_canvas").hide();
+				//$("#map-canvas").show();
+	        var map = new google.maps.Map(document.getElementById("map-canvas"),
+	            mapOptions);
+	        
+	        var marker = new google.maps.Marker({
+	            position: myLatlng,
+	            map: map,
+	            title:"Allowify",
+	            
+	        });
+	        
+	      }
+ function initialize1(lat,lng) {
+	    	  
+	    	  var myLatlng = new google.maps.LatLng(lat, lng);
+	        var mapOptions = {
+	          center: myLatlng,
+	          zoom: 14,
+	          mapTypeId: google.maps.MapTypeId.ROADMAP,
+	        };
+	        
+	        var map = new google.maps.Map(document.getElementById("map-canvas"),
+	            mapOptions);
+	        
+	        var marker = new google.maps.Marker({
+	            position: myLatlng,
+	            map: map,
+	            title:"Allowify",
+	            	
+	        });
+	        
+	      }
+ 
+	      
+	      
+	      google.maps.event.addDomListener(window, 'load', initialize);
+	      
+	     $(document).ready(function(){
+	    	 
+	    	 
+	    	 $.ajax({
+	    		  type: "GET",
+	    		  url: "/users/getUsers",
+	    		  data: { },
+	    		  dataType: 'json',
+	    		  })
+	    		  .done(function( msg ) {
+	    			  
+	    			  var options	= "<option>Select user</option>";
+	    			  
+	    			  $.each(msg, function(value,name) {
+	    				  
+			    		   options += "<option value="+(name.userName)+"> "+(name.userName)+"</option>";	
+			    		});
+	    			  $("#userName").html(options);
+  					
+	    			  
+	    		  });
+	    	 
+	      $("#userName").on("change",function(){
+	    	  
+
+		    	 $.ajax({
+		    		  type: "GET",
+		    		  url: "/users/getUserCards/"+encodeURIComponent($(this).val().replace(".", "%2E").replace(".", "%2E").replace(".", "%2E"))+"/",
+		    		  data: { },
+		    		  dataType: 'json',
+		    		  })
+		    		  .done(function( msg ) {
+		    			 
+		    			  var options	= "<option value="+00+"> Select Card</option>";
+		    			  
+		    			  $.each(msg, function(value,name) {
+		    				  
+				    		   options += "<option value="+(name.cardNumber)+"> "+(name.cardNumber)+"</option>";	
+				    		});
+		    			  $("#cardNumber").html(options);
+	  					
+		    			  
+		    		  });
+	    	  
+	    	  $.ajax({
+	    		  type: "GET",
+	    		  url: "/users/getUserLocation/"+encodeURIComponent($(this).val().replace(".", "%2E").replace(".", "%2E").replace(".", "%2E"))+"/",
+	    		  data: { },
+	    		  
+	    		
+	    		  })
+	    		  .done(function( msg ) {
+	    			  msg	=	JSON.stringify(msg); 
+	    			 msg	=	msg.replace("[","");
+	    			 msg	=	msg.replace("]","");
+	    			 msg	=	msg.split(",");
+	    		  		
+	    			 
+	    			 // alert(msg[0]);
+	    			 initialize1(msg[1],msg[0]);
+	    		  
+	    		  });
+	      });
+	      
+	      $("#city").on("change",function(){
+	    	  
+	    	  	city	=	$(this).val();
+	        	city	=	city.split(",");
+	        	
+	        	$("#latitude").val($.trim(city[0]));
+	        	$("#longitude").val($.trim(city[1]));
+	        	
+	      });
+	     });
+	    </script>
+	         
+	         
+    </head>
+    <body>
+      <!-- Header -->
+    <header>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-md-offset-3">
+            <div class="logo">
+            	<img src="/users/getlogo" />
+            </div>
+            <div class="title">Allowify transaction simulator</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- form --> 
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-8 col-md-offset-2">
+				<div class="form_box">
+					<form th:action="@{/users/simulator}" method="get" >
+						<div class="form-group">
+            				<label> UserName</label>
+            					<select class="form-control" name="userName" id="userName" style="line-height:28px"><option></option></select>
+            			</div>
+             			<h3>User Location</h3>
+              			<div class="form_map">
+              				<div id="map-canvas" style="height: 200px;" width="100%" height="100%"> </div>
+               				
+              			</div>
+           				<br/>
+             			<div class="row">
+              				<div class="form-group col-sm-6 col-md-6">
+              					<label> Card Number</label>
+              					<select class="form-control" name="cardNumber" id="cardNumber"  style="line-height:28px" >
+              						<option value="00"> Select Card</option>
+              					</select>
+              				</div>
+              				<div class="form-group col-sm-6 col-md-6">
+                				<label> Transaction Amount</label>
+                				$<input type="text" name="amount" id="amount" value="" placeholder="0.00" class="form-control" />
+                			</div>
+          				</div>
+          				<div class="row" style="display: none;">
+              				<div class="form-group col-sm-6 col-md-6">
+                				<label>Lat</label>
+                				<input type="text" name="lat" id="latitude" value="41.878114" class="form-control"/>
+             				</div>
+              				<div class="form-group col-sm-6 col-md-6">
+               					<label>Long</label>
+               					<input type="text" name="lng" id="longitude" value="-87.629798" class="form-control"/>
+              				</div>
+              			</div>
+						<div class="form-group">
+							<label>type in an address</label>
+							<div class="input-group">
+								<input id="geocomplete" type="text" placeholder="Type in an address" value="" class="form-control" />
+								<span class="input-group-btn">
+	          						<button type="button" class="btn btn-primary">FIND</button>
+	        					</span>
+	        				</div>
+	    				</div>
+	    				<h3>transaction Location</h3>
+           				<div class="form_map">
+             				<div id="map_canvas" width="100%" height="100%" style="height: 200px;" > </div>
+           				</div>
+           				<br/>
+           				<input type="button" id="Validate" class="btn btn-primary btn_wid" value="Validate" onclick="return getValidate();"/>
+           				<div id="paymentDiv" name="paymentDiv" style="display: none;">
+           					<div class="line"></div>
+           				
+	           				<h3 id="paymentTitle" name="paymentTitle"></h3>
+	           				<div class="alert alert-warning" id="alert" name="alert"></div>
+	           			
+	           				<a id="PageRefresh" href="" class="btn btn-primary btn_wid">ok</a>
+	           			</div>	
+					</form>	
+					<div>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Show payment success or denied div -->
+	<script>
+		$(document).ready(function(){
+		  $("#Validate").click(function(){
+		    $("#paymentDiv").show();
+		  });
+		});
+	</script>
+	
+	<!-- Remove palcehoder values onFocus -->
+	<script type="text/javascript">
+	 $('#amount').focus(function(){
+	       $(this).data('placeholder',$(this).attr('placeholder'))
+	       $(this).attr('placeholder','');
+	    });
+	    $('#amount').blur(function(){
+	       $(this).attr('placeholder',$(this).data('placeholder'));
+	    });
+	</script>
+	<script type="text/javascript">
+	 $('#geocomplete').focus(function(){
+	       $(this).data('placeholder',$(this).attr('placeholder'))
+	       $(this).attr('placeholder','');
+	    });
+	    $('#geocomplete').blur(function(){
+	       $(this).attr('placeholder',$(this).data('placeholder'));
+	    });
+	</script>
+	
+	<!-- Refresh page onClick on OK button -->
+	<script type="text/javascript">
+		$('#PageRefresh').click(function() {
+			window.location.reload();
+		});
+	</script>
+	
+	
+	<script>
+		$(function(){
+			$("#geocomplete").on('focus',function(){ 
+				
+				//$("#map-canvas").hide();
+				//$("#map_canvas").show();
+				
+			
+			});
+			
+			$("#geocomplete").geocomplete({
+					map: "#map_canvas",
+					details: "form",
+					  markerOptions: {
+						draggable: true
+					  }
+					 
+				});
+			
+			/*$("#geocomplete").on('focus',function(){ 
+				//document.getElementById('map-canvas').innerHTML = '';  
+				  console.log(123);
+				$("#geocomplete").geocomplete({
+					map: "#map-canvas",
+					details: "form ",
+					  markerOptions: {
+						draggable: true
+					  }
+					 
+				});
+				console.log(1234);
+			});*/
+		  
+	        
+	        $("#geocomplete").bind("geocode:dragged", function(event, latLng){
+	        	
+	          $("input[name=lat]").val(latLng.lat());
+	          $("input[name=lng]").val(latLng.lng());
+			
+	        });
+			
+	        $("#find").click(function(){
+	        	
+	        	
+			 $("#geocomplete").trigger("geocode");
+			
+	        }).click();
+			
+	      });
+    </script>
+	
+	<!-- Function for onClick on validate button to get message -->
+    <script type="text/javascript" >
+        function getValidate(){
+        	
+        	$("#Validate").attr('disabled','disabled');
+        	userName	=	document.getElementById("userName").value;
+        	cardNumber	=	document.getElementById("cardNumber").value;
+        	amount		=	document.getElementById("amount").value;
+        	var div = document.getElementById('alert');
+        	var payTitle = document.getElementById('paymentTitle');
+
+       latitude =  $("#latitude").val();
+       longitude =  $("#longitude").val();
+		if(latitude==""){ latitude = 0; }
+		if(amount==""){amount = 0;}
+		if(longitude==""){ longitude = 0; }
+        	var xmlhttp;
+        	if (window.XMLHttpRequest)
+        	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+        	  	xmlhttp=new XMLHttpRequest();
+        	  
+        	  }else{// code for IE6, IE5
+        	  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        	  }
+        	
+        	xmlhttp.onreadystatechange = function() {
+        		if (xmlhttp.readyState == 4 ) {
+        	           if(xmlhttp.status == 200){
+        	        	  //Condition for payment Success
+        	        	   if($.trim(xmlhttp.responseText) == "Payment succeeded" || $.trim(xmlhttp.responseText) == '"Payment succeeded"'){
+        	      				div.innerHTML = xmlhttp.responseText;
+        	      				payTitle.innerHTML = xmlhttp.responseText;
+        	      				
+        	      			// Condition for validation error
+        	      		  	}else if($.trim(xmlhttp.responseText) == "Invalid UserName" 
+        	      		  			||$.trim(xmlhttp.responseText) == '"Invalid UserName"' 
+        	      		  			|| $.trim(xmlhttp.responseText) == "Please select a valid card"
+        	      		  			|| $.trim(xmlhttp.responseText) == '"Please select a valid card"'
+        	      		  			|| $.trim(xmlhttp.responseText) == "Invalid amount"
+        	      		  			|| $.trim(xmlhttp.responseText) == '"Invalid amount"'
+        	      		  			|| $.trim(xmlhttp.responseText) == "Invalid Location"
+            	      		  		|| $.trim(xmlhttp.responseText) == '"Invalid Location"'
+        	      		  			|| $.trim(xmlhttp.responseText) == "Invalid cardNumber"
+        	      		  			|| $.trim(xmlhttp.responseText) == "Gps cordinates not found"
+        	      		  			|| $.trim(xmlhttp.responseText) == "Card preferences not found"){
+        	      		  	
+	        	      		  	div.innerHTML =  xmlhttp.responseText;
+	    	      				payTitle.innerHTML = "Validation Error";
+        	      		  	
+	    	      			// Condotion for Payment denied
+        	      		  	}else{
+	        	      		  	div.innerHTML =  xmlhttp.responseText;
+	    	      				payTitle.innerHTML = "Payment Denied";
+        	      		  	}
+        	           }
+        	           $("#Validate").removeAttr('disabled');
+        		}
+        		
+        	}
+        	
+        	xmlhttp.open("GET","/users/"+userName+"/"+cardNumber+"/processTransaction/"+amount+"/"+latitude+"/"+longitude+"/" ,true);
+        	xmlhttp.send();
+        	
+        	return false;
+        }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,164 @@
+#imgInp{ display:none; }
+body.modal-open {
+    overflow: hidden;
+}
+
+#pictureToCrop{ max-width: 500px; max-height: 500px}
+
+#profilePictureModel .modal-dialog{ left: 50%; margin-left: -300px;}
+
+/* css to change the close icon of model box of profile picture */
+/* #profilePictureModel .close {
+  background: #333;
+  border-radius: 0 4px;
+  color: #fff;
+  float: right;
+  height: 30px;
+  line-height: 30px;
+  margin: 0;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  vertical-align: top;
+  width: 30px;
+}
+
+#profilePictureModel .close span {
+  display: inline;
+  line-height: 26px;
+  vertical-align: top;
+} */
+
+#pictureToCrop { /* width:450px;  */margin: 0 auto; display: block;}
+#profilePictureModel .modal-dialog .modal-body{overflow:hidden}
+
+/* Elements that are clickable should show appropriate pointer. */
+.clickable:hover {
+    cursor: pointer;
+}
+
+.seat-map-cell {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+}
+
+td[data-disabled=false].seat-map-cell:hover {
+    color: #337ab7;
+    cursor: pointer;
+}
+
+/* Allows the seat map table to have the bus background. */
+.seat-map-table-container {
+    padding: 50px 10px 20px 10px;
+    background: url("/resources/images/bus.svg");
+    background-size: 100% 100%;
+    background-clip: padding-box;
+    margin: 10px auto;
+    display: inline-block;
+}
+
+.seat-map-table {
+    margin: auto;
+}
+
+.toggle{border-radius: 20px; margin-left: 0 !important;}
+.toggle .toggle-group .btn.toggle-handle {left: -15px;}
+.toggle.off .toggle-group .btn.toggle-handle {left: 15px;}
+.toggle .toggle-group .btn{border-radius: 20px; min-width: 35px; overflow: hidden; text-indent: 1111; color: transparent; }
+.toggle .toggle-group .btn.btn-primary{background: #5cb85c; border-color: #4cae4c;}
+.toggle.btn-primary{ border-color: #4cae4c;}
+.toggle.off .toggle-group{}
+
+.social-img + .control-label{padding-left:0;}
+
+
+.no-click{pointer-events: none;}
+
+/* Logo that goes on the nav-bar header. */
+.header-logo {
+    height: 40px;
+}
+
+/* Override padding to fit brand logo. */
+.navbar-brand {
+    padding: 5px 15px;
+}
+
+.site-footer{
+	text-align: center;
+	padding:15px 0; 
+	border-top:1px solid #e7e7e7; 
+	font-size: 13px; 
+	margin-top:30px; 
+	clear:both;
+}
+
+/* Override Moment-Cell. */
+.backgrid .moment-cell{
+    text-align: left;
+}
+
+/* Gives space to buttons used for selecting seat map elements. */
+.btn-seat-map-element {
+    margin-top: 10px;
+}
+
+/* Insert empty content to empty icon cell. */
+.fa-fw::before {
+    content: '\A0';
+}
+
+/* Booked seat color. */
+.booked {
+	color : #dddddd;
+}
+
+/* Selected seat color. */
+.selected {
+	color : #00ff00;
+}
+
+.disable-segment{pointer-events: none;}
+
+/*
+ * TODO: Make sure that datetime picker renders correctly.
+ * http://bit.ly/1PT61JJ
+ * bit.ly/1XpEOQx
+ * bit.ly/242jhBW
+ */
+.datetime-picker-cell {
+    position: relative;
+}
+
+.panel.mgmt-panel {
+    height: 200px;
+}
+
+.panel-body.mgmt-panel > p:first-child {
+    height: 40px;
+    overflow-y: hidden;
+}
+
+.table.no-border tr th, .table.no-border tr td{border-color:transparent !important;}
+
+.select2-container .select2-choice .select2-arrow {
+    background: transparent !important;
+}
+
+/*
+ * Override Backgrid Select2 Cell alignment.
+ */
+.backgrid .select2-cell {
+    text-align: left;
+}
+.orange {
+	color:#FFA500;
+}
+.form-group.no-label{padding-top:25px;}
+
+.wrapper {
+    border:1px solid #000;
+    display:inline-block;
+}

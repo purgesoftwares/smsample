@@ -1,0 +1,18 @@
+<ol class="breadcrumb">
+    <% _.each(breadcrumbs, function(breadcrumb) { %>
+        <% if (breadcrumb.active) { %>
+        <li class="active">
+            <span>
+                <%- breadcrumb.title %>
+            </span>
+        </li>
+        <% } else { %>
+        <li>
+            <a class="nav-cleanup"
+               href="<%= breadcrumb.path %>">
+                <%- breadcrumb.title %>
+            </a>
+        </li>
+        <% } %>
+    <% }); %>
+</ol>

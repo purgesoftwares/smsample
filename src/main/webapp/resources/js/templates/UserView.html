@@ -1,0 +1,323 @@
+<!-- Flag if it's a new object. -->
+<% var isNew = (model.id) ? false : true; %>
+
+<!-- Flag if it's a self user. -->
+<% var isSelf = (model.isSelf) ? true : false; %>
+
+<!-- Flag if it's a admin user. -->
+<%
+    var isSuperAdmin = false;
+    if (Array.isArray(model.userRolesString)) {
+        if (model.userRolesString.indexOf("SuperAdmin") != -1) {
+            isSuperAdmin = true;
+        } else {
+            isSuperAdmin = false;
+        }
+    }
+%>
+
+<!-- Breadcrumbs -->
+<%= renderBreadcrumbs({ breadcrumbs: breadcrumbs }) %>
+
+<!-- Button Toolbar -->
+<% if (!isNew) { %>
+<div class="row">
+    <div class="col-lg-12 col-md-12 text-right">
+        <div class="btn-toolbar" role="toolbar">
+            <button id="edit"
+                    class="btn btn-primary">
+                Edit
+            </button>
+            <button id="delete"
+                    class="btn btn-danger">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<!-- Description Text -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <h1><span class="text-capitalize">User</span></h1>
+        <p>View and edit a user.</p>
+    </div>
+</div>
+
+<!-- Form -->
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <form id="form">
+
+         <!-- Profile Picture -->
+            <h3>Profile Picture</h3>
+            <div class="form-group">
+                <input type="hidden"
+                       id="profilePictureId"
+                       name="profilePictureId"
+                       value="<%- model.profilePictureId %>"/>
+
+                <img id="cropedProfilePicture" data-toggle="modal"
+                     data-target="#profilePictureModel"
+                     alt="Click to change Profile Picture"
+                     src="<% if (model.profilePictureId){ %>../files/getProfilePicture/<%- ppm.id+'/'+ppm.profilePicture.filename %><% }else{ %>../resources/images/Default-Profile-Picture.jpg<% } %>"
+                     width="150px">
+            </div>
+            <div class="form-group">
+                <div class="btn-group clearfix" role="group">
+                    <button type="button"
+                            data-toggle="modal"
+                            data-target="#profilePictureModel"
+                            class="btn btn-default">
+                        Edit
+                    </button>
+                    <button type="button"
+                            class="btn btn-default remove-picture">
+                        Remove
+                    </button>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+			<h3>Basic Information</h3>
+            <% if (!isNew) { %>
+            <div class="form-group">
+                <label class="control-label" for="id">Id</label>
+                <input type="text"
+                       class="form-control"
+                       id="id"
+                       placeholder="ID"
+                       value="<%- model.id %>"
+                       disabled/>
+            </div>
+            <% } %>
+            <div class="form-group">
+                <label class="control-label" for="username">
+                    Username (Email)
+                </label>
+                <input type="email"
+                       class="form-control <% if (isNew) { %>editable<% } %>"
+                       id="username"
+                       placeholder="Email"
+                       value="<%- model.username %>"
+                       disabled />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="firstName">First Name</label>
+                <input type="text"
+                       class="form-control editable"
+                       id="firstName"
+                       placeholder="First Name"
+                       value="<%- model.firstName %>"
+                       disabled />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="lastName">Last Name</label>
+                <input type="text"
+                       class="form-control editable"
+                       id="lastName"
+                       placeholder="Last Name"
+                       value="<%- model.lastName %>"
+                       disabled />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="gender">Gender</label>
+                <select id="gender"
+                        name="gender"
+                        class="form-control editable select2-dropdown" disabled >
+                    <option value="">Select Gender</option>
+                    <option value="male" <% if (model.gender=='male') { %>
+                            selected="selected" <% } %> >Male</option>
+                    <option value="female" <% if (model.gender=='female') { %>
+                            selected="selected" <% } %> >Female</option>
+                </select>
+            </div>
+              <!-- Permissions -->
+            <div class="form-group" id="roles">
+                <label class="control-label">User Roles</label>
+                <% _.each(spc, function(role) {
+                    var name = role.securityProfileName
+                    var hasRole = model.userRolesString.indexOf(name) !== -1
+                %>
+                    <div class="checkbox">
+                        <label class="control-label">
+                            <input value="<%- name %>"
+                                   class="editable"
+                                   type="checkbox"
+                                   disabled
+                                   <% if (hasRole) { %>
+                                   checked
+                                   <% } %>
+                            />
+                            <%- name %>
+                        </label>
+                    </div>
+                <% }); %>
+            </div>
+
+            <!-- Password -->
+            <% if (isNew) { %>
+            <h3>Password</h3>
+            <div class="form-group">
+                <input type="password"
+                       class="form-control editable"
+                       id="newPassword"
+                       placeholder="Password"
+                       value="<%- model.newPassword %>"
+                       disabled />
+            </div>
+            <% } else { %>
+          <!--       <a <% if (isSelf) { %> id="show_reset_password_form" <% } else { %> id="reset_password" <% } %> class="btn btn-default btn-edit" href="javascript:void(0);">Reset</a>
+                <div id="user_password_form">
+	                <div class="row">
+	    				<div class="col-lg-2 col-md-2 col-sm-2">
+	    					Old Password
+	    				</div>
+	    				<div class="col-lg-10 col-md-10 col-sm-10">
+	    					<div class="form-group">
+                    <input type="password"
+                           class="form-control editable"
+                           id="oldPassword"
+                           placeholder="Old Password"
+                           value="" />
+                </div>
+	    				</div>
+	    			</div>
+	    			<hr />
+	    			<div class="row">
+	    				<div class="col-lg-2 col-md-2 col-sm-2">
+	    					New Password
+	    				</div>
+	    				<div class="col-lg-10 col-md-10 col-sm-10">
+	    					<div class="form-group">                       
+                    <input type="password"
+                           class="form-control editable"
+                           id="newPassword"
+                           placeholder="New Password"
+                           value="" />
+                </div>
+	    				</div>
+	    			</div>
+	    			<div class="row">
+	    				<div class="col-lg-2 col-md-2 col-sm-2">
+	    					Confirm New Password
+	    				</div>
+	    				<div class="col-lg-10 col-md-10 col-sm-10">
+	    					<div class="form-group">                 
+                    <input type="password"
+                           class="form-control editable"
+                           id="confirmNewPassword"
+                           placeholder="Confirm New Password"
+                           value="" />
+                </div>
+	    				</div>
+	    			</div>
+	    			<a id="hide_reset_password_form" class="btn btn-default btn-edit" href="javascript:void(0);">Cancel</a>
+    			</div> -->
+            <% } %>
+           
+            <% if (!isSelf || isSuperAdmin) { %>
+            <!-- Activity -->
+            <h3>Activity</h3>
+            <div class="form-group">
+                <label class="control-label">Status</label>
+                <div class="checkbox">
+                    <label class="control-label">
+                        <input id="enabled"
+                               class="editable"
+                               type="checkbox"
+                               disabled
+                               <% if (model.enabled) { %> checked <% } %>
+                        />
+                    </label>
+                    <label class="control-label">
+                        Active
+                    </label>
+                </div>
+               <div class="checkbox">
+                    <label class="control-label">
+                        <input id="blocked"
+                               class="editable"
+                               type="checkbox"
+                               disabled
+                               <% if (model.blocked) { %> checked <% } %>
+                        />
+                    </label>
+                    <label class="control-label">
+                        Blocked
+                    </label>
+                </div>
+            </div>
+            <% if (!isNew) { %>
+            <div class="form-group">
+                <label class="control-label" for="lastLogin">Last Login</label>
+                <input type="text"
+                       class="form-control"
+                       id="lastLogin"
+                       placeholder="Last Login"
+                       value="<%- formateDate(model.lastLogin) %>"
+                       disabled />
+            </div>
+            <% } %>
+            <% } %>
+            <!-- Button Toolbar -->
+            <div class="text-right">
+                <div class="btn-toolbar" role="toolbar">
+                    <button id="cancel" class="btn btn-default btn-edit">
+                    	Cancel
+                    </button>
+                    <button id="save" class="btn btn-success btn-edit">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade"
+     id="profilePictureModel"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="profilePictureModelLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closeProfilePictureModal"
+                        aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="PDFViewModalLabel">
+                    Profile Picture
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type='file'
+                       id="imgInp"
+                       accept="image/gif,image/jpg,image/bmp,image/png" />
+                <img id="pictureToCrop" alt="Click to change Profile Picture"
+                     src="<% if (model.profilePictureId){ %>../files/getFile/<%- ppm.id+'/'+ppm.profilePicture.filename %><% }else{ %>../resources/images/Default-Profile-Picture.jpg<% } %>"
+                />
+            </div>
+            <div class="form-group text-center clearfix">
+                <div class="btn-group" role="group">
+                    <button type="button"
+                            class="btn btn-default remove-picture">Remove
+                    </button>
+                    <button type="button" id="change-picture"
+                            class="btn btn-default">Change
+                    </button>
+                    <button type="button"
+                            class="btn btn-default closeProfilePictureModal">Cancel
+                    </button>
+                    <button type="button" id="saveProfilePicture"
+                            class="btn btn-default">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

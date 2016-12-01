@@ -1,0 +1,31 @@
+<!-- Breadcrumbs -->
+<%= renderBreadcrumbs({ breadcrumbs: breadcrumbs }) %>
+
+<!-- Description Text -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h1> Home </h1>
+    <p> Welcome to your homepage. </p>
+</div>
+
+<!-- User Management Modules -->
+<div class="row text-center">
+<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="mgmt-panel panel panel-primary clickable"
+             onclick="window.location.href='#management/user'">
+            <div class="panel-heading">
+                <a href="#management/user"
+                   class="h3 panel-title">
+                     User Management 
+                </a>
+            </div>
+            <div class="panel-body">
+                <p> Manage everything related to users. </p>
+                <p>
+                    <a href="#management/user">
+                        <i class="fa fa-user fa-5x text-primary"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
+</div>
+</div>
